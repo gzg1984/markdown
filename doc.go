@@ -1,4 +1,4 @@
-package doc
+package markdown
 
 import (
 	"fmt"
@@ -11,34 +11,12 @@ const LevelTitle = 3
 const LevelNormal = 5
 const LevelWord = 6
 
-type MarkDownDoc struct {
-	builder *strings.Builder
-}
 
-func NewMarkDown() *MarkDownDoc {
-	m := new(MarkDownDoc)
-	m.builder = new(strings.Builder)
-	return m
-}
-
-func (m *MarkDownDoc) WriteLevel1Title(content string) *MarkDownDoc {
-	m.WriteTitle(content, 1)
-	return m
-}
 
 func (m *MarkDownDoc) write(content string) {
 	m.builder.WriteString(content)
 }
 
-func (m *MarkDownDoc) GetTitle(content string, level int) string {
-	return strings.Repeat("#", level) + " " + content
-}
-
-func (m *MarkDownDoc) WriteTitle(content string, level int) *MarkDownDoc {
-	m.write(m.GetTitle(content, level))
-	m.Writeln()
-	return m
-}
 
 func (m *MarkDownDoc) WriteWordLine(content string) *MarkDownDoc {
 	m.Write(content)

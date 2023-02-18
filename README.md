@@ -2,33 +2,35 @@
 
 
 ``` go
-package main
+package markdown_test
 
 import (
-	"github.com/atsushinee/go-markdown-generator/doc"
 	"io/ioutil"
 	"log"
+	"testing"
+
+	"github.com/gzg1984/markdown"
 )
 
-func main() {
+func TestMain(t *testing.T) {
 	example()
 }
 
 func example() {
-	code, _ := ioutil.ReadFile("main.go")
-	book := doc.NewMarkDown()
-	book.WriteTitle("Go-MarkDownDoc-Generator", doc.LevelTitle).
+	code, _ := ioutil.ReadFile("markdown_test.go")
+	book := markdown.NewMarkDown()
+	book.WriteTitle("Go-MarkDownDoc-Generator", markdown.LevelTitle).
 		WriteLines(2)
 
 	book.WriteMultiCode(string(code), "go")
 
-	book.WriteTitle("Author", doc.LevelNormal).
+	book.WriteTitle("Author", markdown.LevelNormal).
 		WriteCodeLine("lichun")
 
-	book.WriteTitle("Website", doc.LevelNormal)
+	book.WriteTitle("Website", markdown.LevelNormal)
 	book.WriteLinkLine("lichunorz", "https://lichunorz.com")
 
-	t := doc.NewTable(4, 4)
+	t := markdown.NewTable(4, 4)
 	t.SetTitle(0, "Version")
 	t.SetTitle(1, "Date")
 	t.SetTitle(2, "Creator")

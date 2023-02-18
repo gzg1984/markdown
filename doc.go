@@ -11,12 +11,9 @@ const LevelTitle = 3
 const LevelNormal = 5
 const LevelWord = 6
 
-
-
 func (m *MarkDownDoc) write(content string) {
 	m.builder.WriteString(content)
 }
-
 
 func (m *MarkDownDoc) WriteWordLine(content string) *MarkDownDoc {
 	m.Write(content)
@@ -43,15 +40,6 @@ func (m *MarkDownDoc) WriteLines(lines int) *MarkDownDoc {
 func (m *MarkDownDoc) WriteJson(content string) *MarkDownDoc {
 	m.WriteMultiCode(content, "json")
 	return m
-}
-func (m *MarkDownDoc) GetMultiCode(content, t string) string {
-	return fmt.Sprintf("``` %s\n%s\n```\n", t, content)
-}
-
-func (m *MarkDownDoc) WriteMultiCode(content, t string) *MarkDownDoc {
-	m.write(m.GetMultiCode(content, t))
-	return m
-
 }
 
 func (m *MarkDownDoc) WriteCodeLine(content string) *MarkDownDoc {

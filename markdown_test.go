@@ -2,6 +2,8 @@ package markdown_test
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -22,11 +24,15 @@ var vcm = make(map[string]vidioCollation)
 // -args selpg -s1 -e1 input.txt
 func onlyRecordJap(path string, info os.FileInfo, err error) error {
 	if err != nil {
+		fmt.Printf("onlyRecordJap meet error %v", err)
 		return nil /*ignore error*/
 	}
 
 	if info.IsDir() == true {
 		current_deepth := len(strings.Split(path, "/"))
+		fmt.Printf("current_deepth is %d\n", current_deepth)
+		fmt.Println(path) //打印当前文件或目录下的文件或目录名
+
 		if current_deepth == original_deepth+1 {
 			vcm[info.Name()] = vidioCollation{
 				name: info.Name(),
@@ -41,14 +47,44 @@ func onlyRecordJap(path string, info os.FileInfo, err error) error {
 }
 
 var global_analyze_path = "/Volumes/2T Vedio/日本动画"
-var original_deepth = len(strings.Split(global_analyze_path, "/"))
+
+// var original_deepth = len(strings.Split(global_analyze_path, "/"))
+
+// 只分析到第四层目录
+var original_deepth = 4
+
+var result_file_name_prefix string
+
+/*
+自动获取外接硬盘下的目标目录的路径
+*/
+func getTargetPath() string {
+	//获取文件或目录相关信息
+	fileInfoList, err := ioutil.ReadDir("/Volumes")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range fileInfoList {
+		if file.Name() == "Macintosh HD" {
+			continue
+		} else {
+			result_file_name_prefix = file.Name()
+			return "/Volumes/" + file.Name() + "/日本动画"
+		}
+
+		//fmt.Println(fileInfoList[i].Name()) //打印当前文件或目录下的文件或目录名
+	}
+	return "/not_exist"
+}
 
 func TestListFile(t *testing.T) {
-	t.Logf("Args are: %v", os.Args)
-	_ = filepath.Walk(global_analyze_path, onlyRecordJap)
+
+	//t.Logf("Args are: %v", os.Args)
+	_ = filepath.Walk(getTargetPath(), onlyRecordJap)
 
 	book := markdown.NewMarkDown()
-	book.WriteTitle("2T Vedio/日本动画", markdown.LevelTitle).
+	book.WriteTitle(result_file_name_prefix+"/日本动画", markdown.LevelTitle).
 		WriteLines(2)
 
 	vidiaTable := markdown.NewTable(len(vcm), 2)
@@ -60,14 +96,14 @@ func TestListFile(t *testing.T) {
 		i++
 	}
 	book.WriteTable(vidiaTable)
-	err := book.Export("video.md")
+	err := book.Export(result_file_name_prefix + ".md")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	s, _ := json.Marshal(vcm)
 	/*TODO: 名字和初始路径关联*/
-	os.WriteFile("2.json", s, os.ModePerm)
+	os.WriteFile(result_file_name_prefix+".json", s, os.ModePerm)
 
 }
 

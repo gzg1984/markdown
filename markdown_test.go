@@ -77,34 +77,44 @@ func getTargetPath() string {
 	}
 	return "/not_exist"
 }
-
-func TestListFile(t *testing.T) {
-
-	//t.Logf("Args are: %v", os.Args)
-	_ = filepath.Walk(getTargetPath(), onlyRecordJap)
-
-	book := markdown.NewMarkDown()
-	book.WriteTitle(result_file_name_prefix+"/日本动画", markdown.LevelTitle).
-		WriteLines(2)
+func writeToTalbe(book *markdown.MarkDownDoc) {
+	book.WriteTitle(result_file_name_prefix+"/日本动画", markdown.LevelTitle)
 
 	vidiaTable := markdown.NewTable(len(vcm), 2)
 	i := 0
 	vidiaTable.SetTitle(0, "名字")
 	for name := range vcm {
 		vidiaTable.SetContent(i, 0, name)
-		//t.Logf("contest are: %v", c)
 		i++
 	}
 	book.WriteTable(vidiaTable)
+}
+func writeToHtmlMD(book *markdown.MarkDownDoc) {
+	book.WriteTitle(result_file_name_prefix+"/日本动画", markdown.LevelTitle)
+	for name := range vcm {
+		book.WriteDefaultBlock(name)
+
+	}
+
+}
+func writeToJson() {
+	s, _ := json.Marshal(vcm)
+	os.WriteFile(result_file_name_prefix+".json", s, os.ModePerm)
+}
+func TestListFile(t *testing.T) {
+
+	//t.Logf("Args are: %v", os.Args)
+	_ = filepath.Walk(getTargetPath(), onlyRecordJap)
+
+	book := markdown.NewMarkDown()
+	writeToTalbe(book)
+	writeToHtmlMD(book)
 	err := book.Export(result_file_name_prefix + ".md")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	s, _ := json.Marshal(vcm)
-	/*TODO: 名字和初始路径关联*/
-	os.WriteFile(result_file_name_prefix+".json", s, os.ModePerm)
-
+	writeToJson()
 }
 
 /*

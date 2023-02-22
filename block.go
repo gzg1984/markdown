@@ -3,7 +3,7 @@ package markdown
 import "strings"
 
 func (m *MarkDownDoc) GetBlockPrefix(content string, level int) string {
-	return strings.Repeat("	", level) + "-" + content
+	return strings.Repeat("	", level) + "- " + content
 }
 
 func (m *MarkDownDoc) WriteBlock(content string, level int) *MarkDownDoc {
@@ -12,6 +12,7 @@ func (m *MarkDownDoc) WriteBlock(content string, level int) *MarkDownDoc {
 	return m
 }
 func (m *MarkDownDoc) WriteDefaultBlock(content string) *MarkDownDoc {
+	//m.write(m.GetBlockPrefix(content, 0)).WriteLines(1)
 	m.write(m.GetBlockPrefix(content, 0))
 	m.Writeln()
 	return m

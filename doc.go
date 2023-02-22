@@ -11,8 +11,9 @@ const LevelTitle = 3
 const LevelNormal = 5
 const LevelWord = 6
 
-func (m *MarkDownDoc) write(content string) {
+func (m *MarkDownDoc) write(content string) *MarkDownDoc {
 	m.builder.WriteString(content)
+	return m
 }
 
 func (m *MarkDownDoc) WriteWordLine(content string) *MarkDownDoc {

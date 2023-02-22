@@ -30,8 +30,8 @@ func onlyRecordJap(path string, info os.FileInfo, err error) error {
 
 	if info.IsDir() == true {
 		current_deepth := len(strings.Split(path, "/"))
-		fmt.Printf("current_deepth is %d\n", current_deepth)
-		fmt.Println(path) //打印当前文件或目录下的文件或目录名
+		//fmt.Printf("current_deepth is %d\n", current_deepth)
+		//fmt.Println(path) //打印当前文件或目录下的文件或目录名
 
 		if current_deepth == original_deepth+1 {
 			vcm[info.Name()] = vidioCollation{
